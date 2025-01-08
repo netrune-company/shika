@@ -1,15 +1,12 @@
 [workspace]
 resolver = "2"
-members = [
-    "app",
-    "libs/*"
-]
+members = ["app", "crates/*"]
 default-members = ["app"]
 
 [workspace.dependencies]
-anyhow = "1.0.89"
-db = { path = "libs/db" }
-renderer = { path = "libs/renderer" }
-tokio = { version = "1.40.0", features = ["rt", "rt-multi-thread"] }
-serde = { version = "1.0.210", features = ["derive"] }
+anyhow = "1.0.95"
+db = { path = "crates/db" }
+renderer = { path = "crates/renderer" }
+tokio = { version = "1.42.0", features = ["rt", "rt-multi-thread"] }
+serde = { version = "1.0.217", features = ["derive"] }
 serde_yaml = { version = "0.9.33" }

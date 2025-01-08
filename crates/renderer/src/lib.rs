@@ -24,7 +24,25 @@ pub fn render(
 pub fn create() -> anyhow::Result<Tera> {
     let mut tera = Tera::new(".shika/templates/**/*.tera")?;
 
-    tera.register_filter("exclude_keys", filter::exclude_keys);
+    tera.register_filter("not_primary", filter::not_primary);
+    tera.register_filter("primary", filter::primary);
+    tera.register_filter("foreign", filter::foreign);
+    tera.register_filter("snake_to_pascal", filter::snake_to_pascal);
 
     Ok(tera)
+}
+
+pub fn render_name(
+    name: &String,
+    tera: &mut Tera,
+    database: &db::Database,
+    table: &db::Table,
+) -> anyhow::Result<String> {
+    let mut context = Context::new();
+    context.insert("database", &database);
+    context.insert("table", &table);
+
+    let output = tera.render_str(name, &context)?;
+
+    Ok(output)
 }

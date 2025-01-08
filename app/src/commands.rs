@@ -143,7 +143,7 @@ pub fn generate(should_pull: bool) -> anyhow::Result<()> {
     let database: Database = serde_yaml::from_reader(file)?;
 
     let mut templates_iter = config.templates.iter();
-    let tera = renderer::create()?;
+    let mut tera = renderer::create()?;
     while let Some(template) = templates_iter.next() {
         create_dir_all(&template.output_dir)?;
 
@@ -194,7 +194,7 @@ pub fn generate(should_pull: bool) -> anyhow::Result<()> {
                 let target_path = format!(
                     "{}/{}",
                     template.output_dir,
-                    template.output.replace("{table}", &table.name)
+                    renderer::render_name(&template.output, &mut tera, &database, &table)?
                 );
                 File::create(&target_path)?.write_all(content.as_bytes())?;
                 count += 1;

@@ -2,17 +2,17 @@ database:
   type: postgres
   exclude_tables:
     - _sqlx_migrations
+
 templates:
+  - name: My Example Template
+    input: example
+    output_dir: generated
+    output: example.rs
+    single: true
+    language: rust
 
-- name: My Example Template
-  input: example
-  output_dir: generated
-  output: example.rs
-  single: true
-  language: rust
-
-- name: My Java Example
-  input: java
-  output_dir: generated
-  output: java.java
-  language: java
+  - name: My Java Example
+    input: java
+    output_dir: generated
+    output: java.java
+    language: java
