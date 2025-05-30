@@ -1,10 +1,10 @@
 [package]
 name = "shika_renderer"
 description = "Shika Renderer"
-version = "0.0.10"
+version = "0.0.1"
 edition = "2024"
-homepage = "https://github.com/netrune/openapi"
-repository = "https://github.com/netrune/openapi"
+homepage = "https://github.com/netrune-company/shika"
+repository = "https://github.com/netrune-company/shika"
 readme = "README.md"
 license = "MIT"
 

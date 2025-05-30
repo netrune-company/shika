@@ -1,7 +1,12 @@
 [package]
 name = "shika"
+description = "Shika CLI"
 version = "0.1.0"
 edition = "2024"
+homepage = "https://github.com/netrune-company/shika"
+repository = "https://github.com/netrune-company/shika"
+readme = "README.md"
+license = "MIT"
 
 [dependencies]
 shika_workspace.workspace = true

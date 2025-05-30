@@ -1,7 +1,12 @@
 [package]
 name = "shika_database"
-version = "0.1.0"
+description = "Shika Database"
+version = "0.0.1"
 edition = "2024"
+homepage = "https://github.com/netrune-company/shika"
+repository = "https://github.com/netrune-company/shika"
+readme = "README.md"
+license = "MIT"
 
 [dependencies]
 serde.workspace = true

@@ -1,1 +1,1 @@
-# OpenAPI Generator
+# Shika Renderer
