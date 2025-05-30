@@ -78,7 +78,7 @@ fn from_kind(kind: &str, is_required: bool) -> String {
         "numeric" => "f64".to_string(),
         "date" => "chrono::NaiveDate".to_string(),
         "timestamp" | "timestamptz" | "timestamp with time zone" => {
-            "chrono::DateTime<FixedOffset>".to_string()
+            "chrono::DateTime<chrono::FixedOffset>".to_string()
         }
         "varchar" | "text" => "String".to_string(),
         "bool" => "bool".to_string(),

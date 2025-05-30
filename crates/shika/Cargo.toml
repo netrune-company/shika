@@ -1,7 +1,7 @@
 [package]
 name = "shika"
 description = "Shika CLI"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2024"
 homepage = "https://github.com/netrune-company/shika"
 repository = "https://github.com/netrune-company/shika"
