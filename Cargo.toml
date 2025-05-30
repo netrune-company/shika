@@ -10,7 +10,7 @@ members = [
 [workspace.dependencies]
 shika_workspace = { version = "0.0.1", path = "crates/shika_workspace" }
 shika_database = { version = "0.0.1", path = "crates/shika_database" }
-shika_renderer = { version = "0.0.1", path = "crates/shika_renderer" }
+shika_renderer = { version = "0.0.2", path = "crates/shika_renderer" }
 
 serde = { version = "1.0.219", features = ["derive"] }
 serde_yml = { version = "0.0.12" }

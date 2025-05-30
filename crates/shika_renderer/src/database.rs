@@ -77,7 +77,9 @@ fn from_kind(kind: &str, is_required: bool) -> String {
         "float8" => "f64".to_string(),
         "numeric" => "f64".to_string(),
         "date" => "chrono::NaiveDate".to_string(),
-        "timestamp" | "timestamptz" => "chrono::FixedDateTime".to_string(),
+        "timestamp" | "timestamptz" | "timestamp with time zone" => {
+            "chrono::DateTime<FixedOffset>".to_string()
+        }
         "varchar" | "text" => "String".to_string(),
         "bool" => "bool".to_string(),
         "uuid" => "uuid::Uuid".to_string(),
