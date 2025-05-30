@@ -1,0 +1,16 @@
+[package]
+name = "shika_renderer"
+description = "Shika Renderer"
+version = "0.0.10"
+edition = "2024"
+homepage = "https://github.com/netrune/openapi"
+repository = "https://github.com/netrune/openapi"
+readme = "README.md"
+license = "MIT"
+
+[dependencies]
+shika_database.workspace = true
+shika_workspace.workspace = true
+serde.workspace = true
+tera = { version = "1.20.0" }
+convert_case = { version = "0.8.0" }

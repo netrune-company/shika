@@ -1,0 +1,9 @@
+[package]
+name = "shika_workspace"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+shika_database.workspace = true
+serde.workspace = true
+serde_yml.workspace = true

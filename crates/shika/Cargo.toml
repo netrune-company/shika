@@ -1,0 +1,12 @@
+[package]
+name = "shika"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+shika_workspace.workspace = true
+shika_database.workspace = true
+shika_renderer.workspace = true
+dotenvy = { version = "0.15.7" }
+clap = { version = "4.5.39", features = ["derive", "env"] }
+tokio = { version = "1.45.1", features = ["full"] }
