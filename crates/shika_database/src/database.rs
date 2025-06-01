@@ -1,7 +1,6 @@
 use std::{fs::File, path::Path};
 
 use futures::TryStreamExt;
-use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 use sqlx::{Pool, Postgres, query_as};
 

@@ -66,7 +66,13 @@ mod filters {
             .ok_or(Error::msg(Value::String("Value is not array".to_string())))?
             .clone()
             .into_iter()
-            .filter(|item| item["is_foreign_key"] == true)
+            .filter(|item| {
+                let Some(references) = item.get("references") else {
+                    return false;
+                };
+
+                !references.is_null()
+            })
             .collect())
     }
 
@@ -76,7 +82,17 @@ mod filters {
             .ok_or(Error::msg(Value::String("Value is not array".to_string())))?
             .clone()
             .into_iter()
-            .filter(|item| item["is_foreign_key"] == false && item["is_primary_key"] == false)
+            .filter(|item| {
+                if item["is_primary_key"] == true {
+                    return false;
+                }
+
+                if let Some(references) = item.get("references") {
+                    return references.is_null();
+                };
+
+                true
+            })
             .collect())
     }
 
