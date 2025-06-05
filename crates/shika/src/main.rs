@@ -3,7 +3,6 @@ use std::process::exit;
 use clap::Parser;
 use dotenvy::dotenv;
 use shika::commands;
-use shika_workspace::Workspace;
 
 #[derive(Parser, Clone, Debug)]
 struct Config {
