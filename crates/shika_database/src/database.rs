@@ -42,8 +42,12 @@ struct TableMetadata {
 struct ColumnMetadata {
     name: String,
     kind: String,
-    is_primary_key: bool,
     optional: bool,
+}
+
+#[derive(sqlx::FromRow, Debug, Clone)]
+struct ColumnConstraints {
+    is_primary_key: bool,
 }
 
 #[derive(sqlx::FromRow, Debug, Clone)]
@@ -84,25 +88,9 @@ impl Database {
                             WHEN C."is_nullable" = 'YES' THEN TRUE
                         ELSE
                             FALSE
-                        END AS "optional",
-                        CASE
-                            WHEN TC."constraint_type" = 'PRIMARY KEY' THEN TRUE
-                        ELSE
-                            FALSE
-                        END AS "is_primary_key",
-                        TC.*
+                        END AS "optional"
                     FROM "information_schema"."columns" AS C
-                    LEFT JOIN "information_schema"."key_column_usage" AS KCU
-                        ON C."column_name" = KCU."column_name"
-                        AND C."table_name" = KCU."table_name"
-                    LEFT JOIN "information_schema"."table_constraints" AS TC
-                        ON TC.table_name = KCU.table_name
-                        AND TC.constraint_catalog = KCU.constraint_catalog
-                        AND TC.constraint_schema = KCU.constraint_schema
-                        AND TC.constraint_name = KCU.constraint_name
-                    WHERE
-                        (TC."constraint_type" IS NULL OR TC."constraint_type" != 'FOREIGN KEY')
-                        AND C."table_name" = $1
+                    WHERE C."table_name" = $1
                 "#,
             )
             .bind(&table.name)
@@ -110,6 +98,31 @@ impl Database {
 
             let mut columns: Vec<Column> = Vec::new();
             while let Some(column) = columns_stream.try_next().await? {
+                let constraints = query_as::<_, ColumnConstraints>(
+                    r#"
+                        SELECT
+                            CASE
+                                WHEN TC."constraint_type" = 'PRIMARY KEY' THEN TRUE
+                            ELSE
+                                FALSE
+                            END AS "is_primary_key",
+                            TC.*
+                        FROM "information_schema"."key_column_usage" AS KCU
+                        LEFT JOIN "information_schema"."table_constraints" AS TC
+                            ON TC.table_name = KCU.table_name
+                            AND TC.constraint_catalog = KCU.constraint_catalog
+                            AND TC.constraint_schema = KCU.constraint_schema
+                            AND TC.constraint_name = KCU.constraint_name
+                        WHERE KCU."column_name" = $1 AND KCU."table_name" = $2
+                    "#,
+                )
+                .bind(&column.name)
+                .bind(&table.name)
+                .fetch_all(&connection)
+                .await?;
+
+                let is_primary_key = constraints.into_iter().any(|c| c.is_primary_key);
+
                 // Query for all columns referencing this column.
                 let referenced_by = query_as::<_, ColumnReferenceMetadata>(
                     r#"
@@ -151,7 +164,7 @@ impl Database {
                 columns.push(Column {
                     name: column.name,
                     kind: column.kind,
-                    is_primary_key: column.is_primary_key,
+                    is_primary_key,
                     required: !column.optional,
                     referenced_by: referenced_by
                         .into_iter()
