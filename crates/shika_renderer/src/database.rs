@@ -19,6 +19,7 @@ pub struct Column {
     pub referenced_by: Vec<Reference>,
     pub references: Option<Reference>,
     pub is_primary_key: bool,
+    pub is_unique: bool,
 }
 
 #[derive(Serialize, Clone, Debug)]
@@ -41,6 +42,7 @@ impl From<shika_database::Database> for Database {
                         name: c.name,
                         kind: from_kind(&c.kind, c.required),
                         is_primary_key: c.is_primary_key,
+                        is_unique: c.is_unique,
                         required: c.required,
                         referenced_by: c
                             .referenced_by

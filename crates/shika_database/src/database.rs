@@ -25,6 +25,7 @@ pub struct Column {
     pub referenced_by: Vec<Reference>,
     pub references: Option<Reference>,
     pub is_primary_key: bool,
+    pub is_unique: bool,
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
@@ -48,6 +49,7 @@ struct ColumnMetadata {
 #[derive(sqlx::FromRow, Debug, Clone)]
 struct ColumnConstraints {
     is_primary_key: bool,
+    is_unique: bool,
 }
 
 #[derive(sqlx::FromRow, Debug, Clone)]
@@ -106,6 +108,11 @@ impl Database {
                             ELSE
                                 FALSE
                             END AS "is_primary_key",
+                            CASE
+                                WHEN TC."constraint_type" = 'UNIQUE' THEN TRUE
+                            ELSE
+                                FALSE
+                            END AS "is_unique",
                             TC.*
                         FROM "information_schema"."key_column_usage" AS KCU
                         LEFT JOIN "information_schema"."table_constraints" AS TC
@@ -121,7 +128,8 @@ impl Database {
                 .fetch_all(&connection)
                 .await?;
 
-                let is_primary_key = constraints.into_iter().any(|c| c.is_primary_key);
+                let is_primary_key = constraints.iter().any(|c| c.is_primary_key);
+                let is_unique = constraints.iter().any(|c| c.is_unique);
 
                 // Query for all columns referencing this column.
                 let referenced_by = query_as::<_, ColumnReferenceMetadata>(
@@ -165,6 +173,7 @@ impl Database {
                     name: column.name,
                     kind: column.kind,
                     is_primary_key,
+                    is_unique,
                     required: !column.optional,
                     referenced_by: referenced_by
                         .into_iter()
